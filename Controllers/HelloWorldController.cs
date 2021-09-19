@@ -12,9 +12,11 @@ namespace test1_webapi.Controllers {
     public class HelloWorldController : ControllerBase {
         
         private readonly ILogger<HelloWorldController> _logger;
+        private readonly UserService _userService;
 
-        public HelloWorldController(ILogger<HelloWorldController> logger){
+        public HelloWorldController(ILogger<HelloWorldController> logger, UserService userService){
             _logger = logger;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -33,6 +35,20 @@ namespace test1_webapi.Controllers {
             };
             _logger.LogInformation(DateTime.Now+" :: TEST USER :: "+user);
             return user;
+        }
+
+        [HttpGet]
+        [Route("user/all")]
+        public List<UserModel> GetAllUsers() {
+            return _userService.Get();
+        }
+
+        [HttpPost]
+        [Route("user")]
+        public ActionResult<UserModel> SaveUser(UserModel user) {
+            _userService.Create(user);
+            return user;
+            
         }
 
     }
